@@ -24,8 +24,6 @@ import mindustry.type.Sector;
 
 public class CampaignStatsMod extends Mod {
 
-    private boolean buttonAdded = false;
-
     @Override
     public void init(){
         Log.info("[CampaignStats] mod init");
@@ -36,16 +34,17 @@ public class CampaignStatsMod extends Mod {
             PlanetDialog planet = Vars.ui.planet;
 
             planet.shown(() -> {
-                Log.info("[CampaignStats] planet dialog shown");
+                planet.buttons.getChildren().forEach(child -> {
+                    if(child instanceof arc.scene.ui.TextButton && ((arc.scene.ui.TextButton)child).getText().toString().equals("Статистика")){
+                        child.remove();
+                    }
+                });
 
-                if(!buttonAdded){
-                    planet.buttons.button("Статистика", this::showStats);
-                    buttonAdded = true;
-                    Log.info("[CampaignStats] button added");
-                }
+                planet.buttons.button("Статистика", this::showStats).pad(4);
             });
         });
     }
+
 
     private Planet selectedPlanet;
     private String selectedTab = "overview";
